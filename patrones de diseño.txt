@@ -1,0 +1,129 @@
+Problema 1: 
+Un cliente requiere utilizar sendgrid para envíos de email, pero otro cliente
+requiere enviarlos por mandril. Se quiere evitar el uso de IF, y realizar un diseño en donde
+podamos utilizar más servicios en caso de que un cliente requiera alguno en específico ¿Qué
+patrón de diseño utilizarías y por qué?
+
+*Opción 1: Strategy
+Opción 2: Factory Meth
+Opción 3: Adapter
+
+Respuesta:
+Para el probema planteado la solución ideal es Strategy porque se puede definir una interfaz con varios métodos
+para enviar emails. Al ser una técnica de diseño orientada a objetos permite definir distintos algoritmos para 
+después elegir cual de ellos utilizar sin modificr la estructura. Así teniendo un código más limpio, mantenible
+y adaptable a nuevos cambios.
+
+
+Problema 2: 
+Explica en tus propias palabras la diferencia entre Factory Method y Abstract Factory. 
+Y proporciona un caso de uso.
+
+Respuesta: 
+Ambas sirven para crear objetos, la diferencias es la manera en que se pueden crear.
+El Factory Method crea los objetos desde las subclases mientras que el Abstract Factory agrupa los objetos 
+relacionados en fabricas concretas
+
+Caso de uso:
+- Factory Method
+Creacion de telefonos celulares de distintas marcas y distintos modelos.
+
+    <?php
+    // Producto abstracto (teléfono móvil)
+    interface MobilePhone {
+        public function getModel();
+    }
+
+    // Productos concretos (teléfonos móviles de diferentes marcas)
+    class SamsungPhone implements MobilePhone {
+        public function getModel() {
+            return "Samsung Galaxy S21";
+        }
+    }
+
+    class ApplePhone implements MobilePhone {
+        public function getModel() {
+            return "iPhone 13";
+        }
+    }
+
+    // Creador abstracto
+    abstract class PhoneFactory {
+        abstract public function createPhone(): MobilePhone;
+    }
+
+    // Creadores concretos
+    class SamsungPhoneFactory extends PhoneFactory {
+        public function createPhone(): MobilePhone {
+            return new SamsungPhone();
+        }
+    }
+
+    class ApplePhoneFactory extends PhoneFactory {
+        public function createPhone(): MobilePhone {
+            return new ApplePhone();
+        }
+    }
+
+    // Uso del Factory Method
+    $factory = new SamsungPhoneFactory();
+    $phone = $factory->createPhone();
+    echo "Modelo del teléfono: " . $phone->getModel(); // Salida: "Modelo del teléfono: Samsung Galaxy S21"
+?>
+
+
+Abstract  Factory:
+<?php
+// Producto abstracto (computadora portátil)
+interface Laptop {
+    public function getModel();
+}
+
+// Productos concretos (computadoras portátiles de diferentes marcas)
+class SamsungLaptop implements Laptop {
+    public function getModel() {
+        return "Galaxy Book Go";
+    }
+}
+
+class AppleLaptop implements Laptop {
+    public function getModel() {
+        return "MacBook Air 13";
+    }
+}
+
+// Fábrica abstracta
+interface ElectronicsFactory {
+    public function createMobilePhone(): MobilePhone;
+    public function createLaptop(): Laptop;
+}
+
+// Fábricas concretas
+class SamsungElectronicsFactory implements ElectronicsFactory {
+    public function createMobilePhone(): MobilePhone {
+        return new SamsungPhone();
+    }
+
+    public function createLaptop(): Laptop {
+        return new SamsungLaptop();
+    }
+}
+
+class AppleElectronicsFactory implements ElectronicsFactory {
+    public function createMobilePhone(): MobilePhone {
+        return new ApplePhone();
+    }
+
+    public function createLaptop(): Laptop {
+        return new AppleLaptop();
+    }
+}
+
+// Uso del Abstract Factory
+$electronicsFactory = new SamsungElectronicsFactory();
+$phone = $electronicsFactory->createMobilePhone();
+$laptop = $electronicsFactory->createLaptop();
+echo "Modelo del teléfono: " . $phone->getModel(); // Salida: "Modelo del teléfono: Samsung Galaxy S21"
+echo "Modelo de la laptop: " . $laptop->getModel(); // Salida: "Modelo de la laptop: Galaxy Book Go"
+
+?>
